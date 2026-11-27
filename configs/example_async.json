@@ -1,0 +1,29 @@
+{
+  "seed": 11,
+  "adapter": {"time_unit": "s"},
+  "metadata": {
+    "meter_a": {"unit": "kW", "sampling": "irregular"},
+    "meter_b": {"unit": "kW", "sampling": "event_driven"}
+  },
+  "plan": [
+    {
+      "family": "missing_values", "duration": 4, "duration_unit": "seconds",
+      "params": {"representation": "drop_records"},
+      "schedule": {"channels": "all", "onset_seconds": 35.0, "recurrence": "periodic",
+                   "recurrence_unit": "seconds", "period": 18,
+                   "occurrence": {"mode": "fixed_count", "episode_count": 2}}
+    },
+    {
+      "family": "timestamp", "subtype": "fixed_shift", "duration": 5,
+      "params": {"offset_mode": "absolute", "offset": {"min": 50, "max": 150},
+                 "offset_unit": "ms", "sign": "negative"},
+      "schedule": {"channels": ["meter_a"], "onset_index": 65}
+    },
+    {
+      "family": "timestamp", "subtype": "clock_drift", "duration": 6,
+      "params": {"rate_unit": "ppm", "rate": {"min": 100, "max": 1000, "mode": "log"}},
+      "schedule": {"channels": ["meter_b"], "onset_index": 43}
+    }
+  ],
+  "windows": {"lengths": [16], "stride": 8}
+}

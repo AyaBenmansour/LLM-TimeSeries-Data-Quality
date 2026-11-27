@@ -1,5 +1,8 @@
 # Python
 __pycache__/
+*.egg-info/
+build/
+dist/
 *.pyc
 *.pyo
 .pytest_cache/
@@ -34,6 +37,9 @@ results/*
 # IDE settings
 .vscode/
 .idea/
+
+# Local specification bundle (kept off GitHub)
+Codex_FYP_Injection_Spec_Bundle/
 
 # Operating system files
 .DS_Store

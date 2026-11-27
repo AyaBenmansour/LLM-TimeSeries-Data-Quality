@@ -1,0 +1,37 @@
+# Run on examples/regular.csv. Each row represents one original acquisition.
+seed: 47
+reference: {train_fraction: 0.25}
+reference_window: 40
+defects:
+  bias:
+    duration_unit: samples
+    duration: {min: 2, max: 6}
+    params: {amplitude_multiplier: {min: 0.4, max: 1.8}, direction: positive}
+  spike:
+    reference: {threshold_mode: tukey, tukey_multiplier: {min: 1.5, max: 2}}
+plan:
+  - family: bias
+    severity: 0.5
+    schedule:
+      onset_index: 32
+      recurrence: periodic
+      period: 20
+      occurrence: {mode: fixed_count, episode_count: 3}
+  - family: point_outlier
+    subtype: spike
+    severity: 1
+    params: {direction: positive}
+    schedule: {onset_index: 48}
+  - family: missing_values
+    duration: 2
+    schedule: {onset_index: 65}
+  - family: timestamp
+    subtype: fixed_shift
+    duration: 4
+    params: {offset_mode: absolute, offset: 0.15, offset_unit: s, sign: negative}
+    schedule: {onset_index: 84}
+windows:
+  lengths: [12]
+  stride: 4
+  count: 5
+  target_proportions: {clean: 0.2, single: 0.4, mixed: 0.4}

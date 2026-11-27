@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tsdq-inject"
+version = "0.1.0"
+description = "Controlled defect injection for time-series quality benchmarks"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "pandas>=2.0", "PyYAML>=6"]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+parquet = ["pyarrow>=13"]
+gallery = ["matplotlib>=3.7"]
+
+[project.scripts]
+tsdq-inject = "tsdq.cli:main"
+
+[tool.setuptools]
+packages = ["tsdq", "tsdq.presets"]
+package-dir = {"tsdq" = "src/tsdq", "tsdq.presets" = "configs/presets"}
+
+[tool.setuptools.package-data]
+"tsdq.presets" = ["*.yaml"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "examples"]
+testpaths = ["tests"]

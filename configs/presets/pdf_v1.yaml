@@ -1,0 +1,294 @@
+# PDF amplitudes and corrected FYP v1 methodology. Sampling settings are editable.
+version: fyp-v1
+seed: 23
+severity: 0.5
+reference_window: 100
+adapter:
+  format: long
+  timestamp_col: timestamp
+  sensor_col: sensor_id
+  value_col: value
+  id_col: record_id
+  sensor_name: sensor
+  time_unit: s
+  timezone: null
+  timestamp_type: auto
+  numeric_precision: fractional
+  channels: null
+metadata: {}
+reference:
+  train_fraction: 0.3
+  train_record_ids: null
+  scale: iqr
+  iqr_divisor: 1.349
+  threshold_mode: tukey
+  tukey_multiplier: 1.5
+  sigma_multiple: 3
+  quantiles: [0.01, 0.99]
+  quantile_method: linear
+  rate_quantile: 0.99
+  local_neighbors: 8
+  min_points: 2
+  zero_scale: std_then_resolution
+  local_zero_scale: skip
+  smoother: rolling_median
+  smoothing_window: 7
+  residual_scale: iqr
+schedule:
+  occurrence: {mode: fixed_count, episode_count: 1}
+  recurrence: random
+  period: 100
+  recurrence_unit: samples
+  cluster_size: 3
+  cluster_width: 100
+  channels: null
+  channel_count: null
+  channel_selection: random
+  anchor_channel: null
+  onset_index: null
+  onset_seconds: null
+  allowed_indices: null
+  allowed_seconds: null
+  persistence: temporary
+  min_separation: 0
+  max_attempts: 32
+validation: {tolerance: 0, use_sensor_resolution: true}
+composition: {order: [value, missing, timestamp], allow_overlap: []}
+evaluation:
+  reference_visible: false
+  timing_reference_visible: false
+  metadata_visible: false
+windows:
+  lengths: []
+  stride: 1
+  target_proportions: null
+  count: null
+  scoring: episodes
+  scoring_basis: ground_truth
+  include_partial: false
+  natural_change_record_ids: []
+output:
+  format: jsonl
+  observation_columns: [timestamp, sensor_id, value]
+plan: []
+defects:
+  spike:
+    duration: 1
+    params:
+      amplitude_multiplier:
+        min: 3
+        max: 7.5
+      direction: random
+  glitch:
+    duration: 1
+    params:
+      amplitude_multiplier:
+        min: 3
+        max: 6
+      direction: random
+  global:
+    duration:
+      min: 3
+      max: 10
+    params:
+      amplitude_multiplier:
+        min: 3
+        max: 6
+      direction: random
+      scale_mode: value
+      shape: null
+      shapes:
+      - triangle
+      - half_sine
+      - fast_rise_slow_fall
+      - slow_rise_fast_fall
+      - alternating
+      probabilities: null
+      decay: 3
+      min_affected: 2
+      noise_min_samples: 20
+      end_mode: recovery
+      tail_samples: to_end
+      residual_fraction: 1
+  contextual:
+    duration:
+      min: 3
+      max: 10
+    params:
+      amplitude_multiplier:
+        min: 3
+        max: 6
+      direction: random
+      scale_mode: value
+      shape: null
+      shapes:
+      - triangle
+      - half_sine
+      - fast_rise_slow_fall
+      - slow_rise_fast_fall
+      - alternating
+      probabilities: null
+      decay: 3
+      min_affected: 2
+      noise_min_samples: 20
+      end_mode: recovery
+      tail_samples: to_end
+      residual_fraction: 1
+  bias:
+    duration_unit: reference_fraction
+    duration:
+      min: 0.2
+      max: 1
+    params:
+      amplitude_multiplier:
+        min: 0.25
+        max: 3
+      direction: random
+  drift:
+    duration_unit: reference_fraction
+    duration:
+      min: 0.3
+      max: 1
+    params:
+      amplitude_multiplier:
+        min: 0.25
+        max: 3
+      direction: random
+      exponent: 1
+      end_mode: reset
+      recovery_samples: 5
+      tail_samples: to_end
+  scaling:
+    duration:
+      min: 10
+      max: 50
+    params:
+      direction: random
+      gain_up:
+        min: 1.25
+        max: 3
+      gain_down:
+        min: 0.75
+        max: 0.25
+      center: segment_mean
+      minimum_movement: 0
+  noise:
+    duration_unit: reference_fraction
+    duration:
+      min: 0.2
+      max: 0.5
+    params:
+      target_ratio:
+        min: 1.5
+        max: 3
+      min_samples: 20
+      ratio_relative_tolerance: null
+  stuck:
+    duration_unit: reference_fraction
+    duration:
+      min: 0.05
+      max: 0.5
+    params:
+      plausible_quantiles:
+      - 0.05
+      - 0.95
+      minimum_movement_scale: 0.5
+  outlier_flatline:
+    duration_unit: reference_fraction
+    duration:
+      min: 0.05
+      max: 0.5
+    params:
+      amplitude_multiplier:
+        min: 3
+        max: 7.5
+      direction: random
+  saturation:
+    duration:
+      min: 10
+      max: 50
+    params:
+      cap_source: quantile
+      side: upper
+      upper_quantile:
+        min: 0.95
+        max: 0.7
+      lower_quantile:
+        min: 0.05
+        max: 0.3
+      min_capped_run: 3
+      soft_coefficient: 0
+  missing_values:
+    duration:
+      min: 2
+      max: 20
+    params:
+      representation: nan
+  fixed_shift:
+    duration:
+      min: 5
+      max: 30
+    params:
+      offset_mode: median_gap
+      steps:
+        min: 1
+        max: 10
+      fractional_offset: 0.5
+      offset: 1
+      offset_unit: s
+      sign: random
+      allow_reorder: false
+      allow_collisions: false
+  jitter:
+    duration:
+      min: 5
+      max: 30
+    params:
+      std_fraction:
+        min: 0.05
+        max: 0.45
+      distribution: normal
+      local_gap_fraction: 0.45
+      max_displacement_seconds: null
+      bound_policy: clip
+      redraw_limit: 100
+      allow_reorder: false
+      allow_collisions: false
+  clock_drift:
+    duration:
+      min: 5
+      max: 30
+    params:
+      rate:
+        min: 0.0001
+        max: 0.01
+        mode: log
+      rate_unit: fraction
+      sign: random
+      allow_reorder: false
+      allow_collisions: false
+  time_stretch:
+    duration:
+      min: 5
+      max: 30
+    params:
+      enabled: false
+      factor:
+        min: 1.5
+        max: 5
+      allow_reorder: false
+      allow_collisions: false
+  duplicate:
+    duration: 1
+    params: {enabled: false, allow_reorder: false, allow_collisions: true}
+  near_duplicate:
+    duration: 1
+    params:
+      enabled: false
+      gap_fraction: {min: 0.01, max: 0.09}
+      sign: positive
+      allow_reorder: false
+      allow_collisions: false
+  dst_shift:
+    duration: 1
+    params: {enabled: false, offset_hours: 1, sign: positive, allow_reorder: false, allow_collisions: false}
