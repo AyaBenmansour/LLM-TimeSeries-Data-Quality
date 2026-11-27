@@ -1,8 +1,5 @@
 # LLM-Based Time-Series Data Quality Assessment
 
-![Status](https://img.shields.io/badge/Status-Ongoing-orange)
-![Project](https://img.shields.io/badge/Project-Master's%20Thesis-blue)
-![Research](https://img.shields.io/badge/Research-Data--Centric%20AI-purple)
 
 ## Overview
 
@@ -90,17 +87,7 @@ The roadmap remains flexible and may evolve according to experimental findings a
 - A potential targeted data quality mitigation approach.
 - A documented open-source research artifact.
 
-## Related Work
 
-- **TSRating:** Rating Quality of Diverse Time Series Data by Meta-learning from LLM Judgment.
-- **TSQAgent:** Rating Time Series Data Quality via Dedicated Agentic Reasoning.
-- **Delving into Large Language Models for Effective Time-Series Anomaly Detection.**
-
-## Supervision
-
-**Co-supervisor:** Dr. Mohamed Reda Bouadjenek  
-Senior Lecturer in Applied Artificial Intelligence  
-Deakin University, Australia
 
 ## Project Status
 
